@@ -3,13 +3,13 @@ package healthcheck
 import (
 	"net/http"
 
-	"github.com/alaanzr/go-api/internals/middleware"
+	"github.com/alaanzr/go-api/pkg/logger"
 )
 
 type HttpHandler func(string, func(w http.ResponseWriter, r *http.Request))
 
 func healthcheckHandler(w http.ResponseWriter, r *http.Request) {
-	middleware.LogRequestStart(func() {
+	logger.LogRequestStart(func() {
 		w.Write([]byte(`{"status": "healthy", "code": 200}`))
 	})
 }
