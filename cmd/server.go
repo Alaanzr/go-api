@@ -5,10 +5,12 @@ import (
 	"time"
 
 	"github.com/alaanzr/go-api/internals/healthcheck"
+	"github.com/alaanzr/go-api/internals/tweet"
 )
 
 func main() {
 	healthcheck.RegisterHandlers(http.HandleFunc)
+	tweet.RegisterHandlers(http.HandleFunc)
 
 	server := http.Server{
 		Addr:           ":8080",
