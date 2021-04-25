@@ -1,0 +1,13 @@
+{
+  "name": "migrations",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "knex": "^0.95.4",
+    "pg": "^8.6.0"
+  },
+  "scripts": {
+    "db:migrate": "knex migrate:latest"
+  }
+}
