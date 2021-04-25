@@ -1,23 +1,24 @@
 package main
 
 import (
+	"log"
 	"net/http"
-	"time"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 
 	"github.com/alaanzr/go-api/internals/healthcheck"
 	"github.com/alaanzr/go-api/internals/tweet"
 )
 
 func main() {
-	healthcheck.RegisterHandlers(http.HandleFunc)
-	tweet.RegisterHandlers(http.HandleFunc)
+	router := chi.NewRouter()
 
-	server := http.Server{
-		Addr:           ":8080",
-		ReadTimeout:    10 * time.Second,
-		WriteTimeout:   10 * time.Second,
-		MaxHeaderBytes: 1 << 20,
-	}
+  	router.Use(middleware.Logger)
+  	router.Use(middleware.Recoverer)
 
-	server.ListenAndServe()
+	healthcheck.RegisterHandlers(router)
+	tweet.RegisterHandlers(router)
+
+	log.Fatal(http.ListenAndServe(":8080", router))
 }

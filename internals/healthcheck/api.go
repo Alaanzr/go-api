@@ -3,17 +3,15 @@ package healthcheck
 import (
 	"net/http"
 
-	"github.com/alaanzr/go-api/pkg/logger"
+	"github.com/go-chi/chi/v5"
 )
 
 type HttpHandler func(string, func(w http.ResponseWriter, r *http.Request))
 
 func healthcheck(w http.ResponseWriter, r *http.Request) {
-	logger.LogRequestStart(func() {
-		w.Write([]byte(`{"status": "healthy", "code": 200}`))
-	})
+	w.Write([]byte(`{"status": "healthy", "code": 200}`))
 }
 
-func RegisterHandlers(handler HttpHandler) {
-	handler("/api/healthcheck", healthcheck)
+func RegisterHandlers(router *chi.Mux) {
+	router.Get("/api/healthcheck", healthcheck)
 }
