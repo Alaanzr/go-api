@@ -10,17 +10,26 @@ import (
 
 type HttpHandler func(string, func(w http.ResponseWriter, r *http.Request))
 
-var tweets = []Tweet{
-	{Content: "tweet 1"},
-	{Content: "tweet 2"},
-}
-
 func getAll(w http.ResponseWriter, r *http.Request) {
+	tweets, err := getTweets()
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return 
+	}
+
 	json.NewEncoder(w).Encode(tweets)
 }
 
 func getOne(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(tweets[0])
+	tweets, err := getTweets()
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return 
+	}
+
+	json.NewEncoder(w).Encode(tweets)
 }
 
 func create(w http.ResponseWriter, r *http.Request) {
@@ -35,7 +44,10 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tweets = append(tweets, *tweet)
+	if err := createTweet(*tweet); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
 	w.WriteHeader(http.StatusCreated)
 }
